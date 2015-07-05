@@ -5,6 +5,7 @@ import json
 import csv
 import os
 import sys
+import datetime
 
 # Load data
 def importFromCsv(conn, inpath, table):
@@ -29,20 +30,21 @@ def importFromCsv(conn, inpath, table):
 
 
 # Update table
-def prepare_data(conf):
+def prepare_data(conn, table, date_debut):
+    cur = conn.cursor()
+    cur.execute('DELETE FROM %s WHERE transaction_date < %s', (table, date_debut)
     
-    
-def process_data(conf):
+def process_data(conn, conf):
     # Query data
     try:
         cur = conn.cursor()
-        cur.execute("SELECT categorie,
+        cur.execute("""SELECT categorie,
                             COUNT(DISTINCT household_key) AS Nb_client,
                             COUNT(DISTINCT transaction_key) AS Nb_trx ,
                             SUM(spend_amount) AS CA
                             from COMPANY
                             where transaction_date BETWEEN %s AND %s 
-                            GROUP BY categorie" % (conf[date_debut], conf[date_fin]))
+                            GROUP BY categorie""" % (conf[date_debut], conf[date_fin]))
         records = cur.fetchall()
     except psycopg2.DatabaseError, e:
         print 'Error %s' % e
@@ -58,27 +60,29 @@ def process_data(conf):
 
 
 def main()
-    if __main__ == "main"
-        # Get configuration file data
-        with open('conf.json') as conf_file:    
-            conf = json.load(conf_file)
-        
-        # Connecting To Database     
-        try:
-          conn = psycopg2.connect(database="testdb", user="postgres", password="123", host="127.0.0.1", port="5432")
-          print "Opened database successfully"
-        except:
-          print "Connexion wrong"
-        
-        # Prepare data
-        try:    
-            importFromCsv(conn, conf['inpath'], conf['table'])
-            prepare_data(conf)
-        except:
-            print "somthing wrong"
-            
-        # Query results
-        process_data(conf)
+    # Get configuration file data
+    with open('conf.json') as conf_file:    
+        conf = json.load(conf_file)
     
-        # Close connexion
-        conn.close()
+    # Connecting To Database     
+    try:
+      conn = psycopg2.connect(database="testdb", user="postgres", password="123", host="127.0.0.1", port="5432")
+      print "Opened database successfully"
+    except:
+      print "Connexion wrong"
+    
+    # Prepare data
+    try:    
+        importFromCsv(conn, conf['inpath'], conf['table'])
+        prepare_data(conn, conf['table'], conf['date_debut'])
+        # Query results
+        process_data(conn, conf)
+    except:
+        print "somthing wrong"
+
+    # Close connexion
+    conn.close()
+    
+if __name__=="__main__":
+    main()
+# http://stackoverflow.com/questions/14087853/python-psycopg2-logging-events
