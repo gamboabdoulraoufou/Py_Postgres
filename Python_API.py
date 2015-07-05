@@ -3,6 +3,8 @@
 import psycopg2
 import json
 import csv
+import os
+import sys
 
 # Get configuration file data
 with open('conf.json') as conf_file:    
@@ -15,33 +17,53 @@ try:
 except:
   print "Connexion wrong"
 
-# Create a Table  
+# Create a Table 
 cur = conn.cursor()
 cur.execute('''CREATE TABLE trx
                (ID INT PRIMARY KEY NOT NULL,
+                categorie CHAR(50),
                 transaction_key CHAR(50) NOT NULL,
-                household_key CHAR(50) NOT NULL,
-                spend_amount REAL);
+                household_key CHAR(20) NOT NULL,
+                spend_amount REAL,
+                transaction_date date);
             ''')
 print "Table created successfully"
-
 conn.commit()
-conn.close()
+
 
 # Load data
 def importFromCsv(conn, fname, table):
     with open(fname) as inf:
-        conn.cursor().copy_from(inf, table)
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.copy_from(inf, table)
+            cursor.commit()
+        except psycopg2.DatabaseError, e:
+            if cursor:
+                cursor.rollback()
+            print 'Error %s' % e    
+                sys.exit(1)
+        finally:
+            if cursor:
+                cursor.close()
+        inf.close()
 
-def main():
-
-    importFromCsv(conn, "c:/myfile.csv", "MyTable")
-    print("Data copied")
+list_file = [i for i in os.listdir(conf_file['path']) if os.path.isfile(i)]
+for f in list_file:
+    importFromCsv(conn, os.path.join(conf_file['path'], f), conf_file['table'])
+    print("%s data copied" % (f))
     
 
 # Query data
 cur = conn.cursor()
-cur.execute("SELECT id, name, address, salary  from COMPANY")
+cur.execute("SELECT categorie,
+                    COUNT(DISTINCT household_key) AS Nb_client,
+                    COUNT(DISTINCT transaction_key) AS Nb_trx ,
+                    SUM(spend_amount) AS CA
+                    from COMPANY
+                    where transaction_date BETWEEN %s AND %s 
+                    GROUP BY categorie" % (conf_file[date_debut], conf_file[date_fin]))
 records = cur.fetchall()
 
 # Save query result in CSV file
@@ -51,3 +73,6 @@ with open('result.csv', 'w') as f:
         writer.writerow(row)
 
 print "Done Writing"
+
+# Close connexion
+conn.close()
