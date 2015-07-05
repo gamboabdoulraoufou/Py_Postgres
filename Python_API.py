@@ -59,10 +59,11 @@ def process_data(conn, conf):
     print "Done Writing"
 
 
-def main()
+def main():
     # Get configuration file data
     with open('conf.json') as conf_file:    
         conf = json.load(conf_file)
+        conf_file.close()
     
     # Connecting To Database     
     try:
