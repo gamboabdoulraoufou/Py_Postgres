@@ -2,5 +2,7 @@
  "outpath":"/rpcm/result_bucket/2015P6",
  "date_debut":"2015-01-01",
  "date_fin":"2015-06-30",
- "table":"trx"
+ "table":"trx",
+ "sasdata":"analytics/crffr/.../rpcm_extract_bucket/2015P6",
+ "sasresults":"analytics/crffr/.../rpcm_extract_bucket/2015P6"
 }
