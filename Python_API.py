@@ -33,18 +33,12 @@ def importFromCsv(conn, inpath, table):
 def prepare_data(conn, table, date_debut):
     cur = conn.cursor()
     cur.execute('DELETE FROM %s WHERE transaction_date < %s', (table, date_debut)
-    
-def process_data(conn, conf):
+                
+def process_data(conn, conf, query, file_name):
     # Query data
     try:
         cur = conn.cursor()
-        cur.execute("""SELECT categorie,
-                            COUNT(DISTINCT household_key) AS Nb_client,
-                            COUNT(DISTINCT transaction_key) AS Nb_trx ,
-                            SUM(spend_amount) AS CA
-                            from COMPANY
-                            where transaction_date BETWEEN %s AND %s 
-                            GROUP BY categorie""" % (conf[date_debut], conf[date_fin]))
+        cur.execute(query)
         records = cur.fetchall()
     except psycopg2.DatabaseError, e:
         print 'Error %s' % e
@@ -52,7 +46,7 @@ def process_data(conn, conf):
         cur.close()
         
     # Save query result in CSV file
-    with open(conf['outpath']+'result.csv', 'w') as f:
+    with open(conf['outpath']+file_name+'.csv', 'w') as f:
         writer = csv.writer(f, delimiter=';')
         for row in records:
             writer.writerow(row)
@@ -77,13 +71,25 @@ def main():
         importFromCsv(conn, conf['inpath'], conf['table'])
         prepare_data(conn, conf['table'], conf['date_debut'])
         # Query results
-        process_data(conn, conf)
+        process_data(conn, conf, equco, "result1")
+        process_data(conn, conf, count, "result2")
     except:
         print "somthing wrong"
 
     # Close connexion
     conn.close()
-    
+
+equco="""SELECT categorie,
+                COUNT(DISTINCT household_key) AS Nb_client,
+                COUNT(DISTINCT transaction_key) AS Nb_trx ,
+                SUM(spend_amount) AS CA
+                from COMPANY
+                where transaction_date BETWEEN %s AND %s 
+                GROUP BY categorie""" % (conf[date_debut], conf[date_fin])
+                
+count="SELECT COUNT(*) AS Nb FROM trx"
+
+
 if __name__=="__main__":
     main()
 # http://stackoverflow.com/questions/14087853/python-psycopg2-logging-events
