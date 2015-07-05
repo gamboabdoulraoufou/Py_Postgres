@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import psycopg2
-inport json
+import json
 import csv
 
 # Get configuration file data
