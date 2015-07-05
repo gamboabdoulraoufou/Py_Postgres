@@ -17,20 +17,6 @@ try:
 except:
   print "Connexion wrong"
 
-# Create a Table 
-cur = conn.cursor()
-cur.execute('''CREATE TABLE trx
-               (ID INT PRIMARY KEY NOT NULL,
-                categorie CHAR(50),
-                transaction_key CHAR(50) NOT NULL,
-                household_key CHAR(20) NOT NULL,
-                spend_amount REAL,
-                transaction_date date);
-            ''')
-print "Table created successfully"
-conn.commit()
-
-
 # Load data
 def importFromCsv(conn, fname, table):
     with open(fname) as inf:
