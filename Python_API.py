@@ -23,7 +23,7 @@ def importFromCsv(conn, inpath, table):
         if cur:
             cur.rollback()
         print 'Error %s' % e    
-            sys.exit(1)
+        sys.exit(1)
     finally:
         if cur:
             cur.close()
@@ -44,7 +44,6 @@ def process_data(conn, conf, query, file_name):
         print 'Error %s' % e
     finally:
         cur.close()
-        
     # Save query result in CSV file
     with open(conf['outpath']+file_name+'.csv', 'w') as f:
         writer = csv.writer(f, delimiter=';')
@@ -61,7 +60,7 @@ def main():
     
     # Connecting To Database     
     try:
-      conn = psycopg2.connect(database="testdb", user="postgres", password="123", host="127.0.0.1", port="5432")
+      conn = psycopg2.connect(database="test_db", user="abdoul", password="1234", host="127.0.0.1", port="5432")
       print "Opened database successfully"
     except:
       print "Connexion wrong"
@@ -69,7 +68,7 @@ def main():
     # Prepare data
     try:    
         importFromCsv(conn, conf['inpath'], conf['table'])
-        prepare_data(conn, conf['table'], conf['date_debut'])
+        #prepare_data(conn, conf['table'], conf['date_debut'])
         # Query results
         process_data(conn, conf, equco, "result1")
         process_data(conn, conf, count, "result2")
@@ -79,13 +78,13 @@ def main():
     # Close connexion
     conn.close()
 
-equco="""SELECT categorie,
-                COUNT(DISTINCT household_key) AS Nb_client,
-                COUNT(DISTINCT transaction_key) AS Nb_trx ,
-                SUM(spend_amount) AS CA
-                from COMPANY
-                where transaction_date BETWEEN %s AND %s 
-                GROUP BY categorie""" % (conf[date_debut], conf[date_fin])
+equco="""SELECT period, sub_code,
+                  COUNT (DISTINCT hhk_code) AS Nb_client,
+                  COUNT (*) AS Nb_UVC, 
+                  SUM(quantity) AS Nb_uvc,
+                  SUM(spend_amount) AS CA 
+          FROM trx
+          GROUP BY sub_code, period""" % (conf[date_debut], conf[date_fin])
                 
 count="SELECT COUNT(*) AS Nb FROM trx"
 
