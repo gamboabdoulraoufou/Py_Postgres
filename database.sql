@@ -1,3 +1,12 @@
+su - postgres
+psql
+
+CREATE USER abdoul WITH PASSWORD '1234';
+
+\q
+
+psql -d test_db -U abdoul
+
 # Create database
 CREATE DATABASE rpcm;
 
