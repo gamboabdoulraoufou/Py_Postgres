@@ -1,20 +1,34 @@
-su - postgres
+
+# Chande user
+sudo su - postgres
+
+# Log on postgres
 psql
 
+# Create user
 CREATE USER abdoul WITH PASSWORD '1234';
 
+# Create database
+CREATE DATABASE test_db;
+
+# Grant acces to user abdoul
+GRANT ALL PRIVILEGES ON DATABASE test_db to abdoul;
+
+# Quit postgres
 \q
 
+# Connect to postgres database
 psql -d test_db -U abdoul
 
-# Create database
-CREATE DATABASE rpcm;
+# Change database
+\c test_db
 
 # Create a Table 
-CREATE TABLE rpcm.trx
+CREATE TABLE trx
                (ID INT PRIMARY KEY NOT NULL,
-                categorie CHAR(50),
-                transaction_key CHAR(50) NOT NULL,
-                household_key CHAR(20) NOT NULL,
+                quantity REAL,
                 spend_amount REAL,
-                transaction_date date);
+                period CHAR(50) NOT NULL,
+                hhk_code CHAR(50) NOT NULL,
+                trx_key_code CHAR(50) NOT NULL,
+                sub_code CHAR(50) NOT NULL);
