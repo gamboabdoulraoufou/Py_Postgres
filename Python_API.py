@@ -85,7 +85,7 @@ equco="""SELECT period, sub_code,
                   SUM(quantity) AS Nb_uvc,
                   SUM(spend_amount) AS CA 
           FROM trx
-          GROUP BY sub_code, period""" % (conf["date_debut"], conf["date_fin"])
+          GROUP BY sub_code, period"""
                 
 count="SELECT COUNT(*) AS Nb FROM trx"
 
