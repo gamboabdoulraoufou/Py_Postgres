@@ -54,11 +54,6 @@ def process_data(conn, conf, query, file_name):
 
 
 def main():
-    # Get configuration file data
-    with open('conf.json') as conf_file:    
-        conf = json.load(conf_file)
-        conf_file.close()
-    
     # Connecting To Database     
     try:
       conn = psycopg2.connect(database="test_db", user="abdoul", password="1234", host="127.0.0.1", port="5432")
@@ -79,6 +74,11 @@ def main():
     # Close connexion
     conn.close()
 
+# Get configuration file data
+with open('conf.json') as conf_file:    
+    conf = json.load(conf_file)
+    conf_file.close()
+        
 equco="""SELECT period, sub_code,
                   COUNT (DISTINCT hhk_code) AS Nb_client,
                   COUNT (*) AS Nb_UVC, 
