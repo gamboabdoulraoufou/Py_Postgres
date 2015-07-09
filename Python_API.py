@@ -33,7 +33,8 @@ def importFromCsv(conn, inpath, table):
 def prepare_data(conn, table, date_debut):
     cur = conn.cursor()
     cur.execute('DELETE FROM %s WHERE transaction_date < %s', (table, date_debut)
-                
+
+    
 def process_data(conn, conf, query, file_name):
     # Query data
     try:
