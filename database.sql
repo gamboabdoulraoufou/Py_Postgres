@@ -13,6 +13,9 @@ CREATE DATABASE test_db;
 
 # Grant acces to user abdoul
 GRANT ALL PRIVILEGES ON DATABASE test_db to abdoul;
+GRANT ALL ON trx to abdoul;
+
+\l
 
 # Quit postgres
 \q
