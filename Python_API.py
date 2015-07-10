@@ -15,7 +15,7 @@ def importFromCsv(conn, inpath, table):
         list_file = [i for i in os.listdir(inpath) if os.path.isfile(i)]
         for i in list_file:
             with open(os.path.join(inpath, i)) as inf:
-                cur.copy_from(inf, table)
+                cur.copy_from(inf, '%s') % table
                 cur.commit()
                 print("%s data copied" % (i))
                 inf.close()
