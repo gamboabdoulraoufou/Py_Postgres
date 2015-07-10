@@ -18,7 +18,7 @@ GRANT ALL PRIVILEGES ON DATABASE test_db to abdoul;
 \q
 
 # Connect to postgres database
-psql -d test_db -U abdoul
+psql -h 127.0.0.1 -d test_db -U abdoul
 
 # Change database
 \c test_db
