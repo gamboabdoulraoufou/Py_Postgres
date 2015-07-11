@@ -68,7 +68,7 @@ def process_data(conn, conf, query, file_name):
 def main():
     # Connecting To Database     
     try:
-      conn = psycopg2.dbapi.connect(database="test_db", user="abdoul", password="1234", host="127.0.0.1", port="5432")
+      conn = psycopg2.connect(database="test_db", user="abdoul", password="1234", host="127.0.0.1", port="5432")
       print "Opened database successfully"
     except:
       print "Connexion wrong"
