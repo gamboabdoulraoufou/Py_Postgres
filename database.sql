@@ -27,9 +27,8 @@ psql -h 127.0.0.1 -d test_db -U abdoul
 \c test_db
 
 # Create a Table 
-CREATE TABLE trx
-               (ID INT PRIMARY KEY NOT NULL,
-                quantity REAL,
+CREATE TABLE trx3
+               (quantity REAL,
                 spend_amount REAL,
                 period CHAR(50) NOT NULL,
                 hhk_code CHAR(50) NOT NULL,
