@@ -18,7 +18,7 @@ def importFromCsv(conn, inpath, table):
         for my_file in list_file:
             csv_data = csv.reader(open(os.path.join(inpath, my_file), 'r'), dialect = 'excel',  delimiter = ',') 
             next(csv_data, None)
-            passData = "INSERT INTO trx3 (quantity, spend_amount, period, hhk_code, trx_key_code, sub_code) VALUES (%s, %s,%s,%s,%s,%s,%s);" 
+            passData = "INSERT INTO trx3 (quantity, spend_amount, period, hhk_code, trx_key_code, sub_code) VALUES (%s,%s,%s,%s,%s,%s);" 
             cur = conn.cursor()
             k=0
             start = datetime.datetime.now()
