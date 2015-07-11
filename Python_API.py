@@ -12,7 +12,7 @@ def importFromCsv(conn, inpath, table):
     cur = None
     try:
         cur = conn.cursor()
-        list_file = [i for i in os.listdir(inpath) if os.path.isfile(i)]
+        list_file = [i for i in os.listdir(inpath) if os.path.isfile(os.path.join(inpath,i))]
         for i in list_file:
             with open(os.path.join(inpath, i)) as inf:
                 cur.copy_from(inf, '%s') % table
