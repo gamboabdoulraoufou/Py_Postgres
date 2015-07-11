@@ -22,6 +22,7 @@ def importFromCsv(conn, inpath, table):
             cur = conn.cursor()
             k=0
             start = datetime.datetime.now()
+            print ('Insert...')
             for row in csv_data:  
                 csvLine = row       
                 cur.execute(passData, csvLine) 
