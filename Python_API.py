@@ -13,12 +13,16 @@ def importFromCsv(conn, inpath, table):
     try:
         cur = conn.cursor()
         list_file = [i for i in os.listdir(inpath) if os.path.isfile(os.path.join(inpath,i))]
-        for i in list_file:
-            with open(os.path.join(inpath, i)) as inf:
-                cur.copy_from(inf, '%s') % table
-                cur.commit()
-                print("%s data copied" % (i))
-                inf.close()
+        if len(list_file)==0:
+            print 'There is any file in %s' % (inpath)    
+            sys.exit(1)
+        else:
+            for i in list_file:
+                with open(os.path.join(inpath, i)) as inf:
+                    cur.copy_from(inf, '%s') % table
+                    cur.commit()
+                    print("%s data copied" % (i))
+                    inf.close()
     except psycopg2.DatabaseError, e:
         if cur:
             cur.rollback()
