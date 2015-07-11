@@ -6,31 +6,24 @@ import csv
 import os
 import sys
 import datetime
+import csv
 
 # Load data
 def importFromCsv(conn, inpath, table):
-    cur = None
-    try:
-        cur = conn.cursor()
-        list_file = [i for i in os.listdir(inpath) if os.path.isfile(os.path.join(inpath,i))]
-        if len(list_file)==0:
-            print 'There is any file in %s' % (inpath)    
-            sys.exit(1)
-        else:
-            for i in list_file:
-                with open(os.path.join(inpath, i)) as inf:
-                    cur.copy_from(inf, '%s') % table
-                    cur.commit()
-                    print("%s data copied" % (i))
-                    inf.close()
-    except psycopg2.DatabaseError, e:
-        if cur:
-            cur.rollback()
-        print 'Error %s' % e    
+    list_file = [i for i in os.listdir(inpath) if os.path.isfile(os.path.join(inpath,i))]
+    if len(list_file)==0:
+        print 'There is any file in %s' % (inpath)    
         sys.exit(1)
-    finally:
-        if cur:
-            cur.close()
+    else:
+        for my_file in list_file:
+            csv_data = csv.reader(open(os.path.join(inpath, my_file), 'r'), dialect = 'excel',  delimiter = ',') 
+            passData = "INSERT INTO trx2 (quantity, spend_amount, period, hhk_code, trx_key_code, sub_code) VALUES (%s, %s,%s,%s,%s,%s,%s);" 
+            cur = conn.cursor()
+            for row in csv_data:  
+                csvLine = row       
+                cur.execute(passData, csvLine) 
+            conn.commit()
+            print ("%s data copied" % (my_file))
 
 
 # Update table
@@ -60,14 +53,19 @@ def process_data(conn, conf, query, file_name):
 def main():
     # Connecting To Database     
     try:
-      conn = psycopg2.connect(database="test_db", user="abdoul", password="1234", host="127.0.0.1", port="5432")
+      conn = psycopg2.dbapi.connect(database="test_db", user="abdoul", password="1234", host="127.0.0.1", port="5432")
       print "Opened database successfully"
     except:
       print "Connexion wrong"
     
+    # Get configuration file data
+    with open('conf.json') as conf_file:    
+        conf = json.load(conf_file)
+        conf_file.close()
+
     # Prepare data
     try:    
-        importFromCsv(conn, conf['inpath'], conf['table'])
+        importFromCsv(conn, conf['inpath'], 'trx3')
         #prepare_data(conn, conf['table'], conf['date_debut'])
         # Query results
         process_data(conn, conf, equco, "result1")
@@ -78,20 +76,16 @@ def main():
     # Close connexion
     conn.close()
 
-# Get configuration file data
-with open('conf.json') as conf_file:    
-    conf = json.load(conf_file)
-    conf_file.close()
-        
+
 equco="""SELECT period, sub_code,
                   COUNT (DISTINCT hhk_code) AS Nb_client,
                   COUNT (*) AS Nb_UVC, 
                   SUM(quantity) AS Nb_uvc,
                   SUM(spend_amount) AS CA 
-          FROM trx2
+          FROM trx3
           GROUP BY sub_code, period"""
                 
-count="SELECT COUNT(*) AS Nb FROM trx2"
+count="SELECT COUNT(*) AS Nb FROM trx3"
 
 
 if __name__=="__main__":
