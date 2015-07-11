@@ -17,13 +17,28 @@ def importFromCsv(conn, inpath, table):
     else:
         for my_file in list_file:
             csv_data = csv.reader(open(os.path.join(inpath, my_file), 'r'), dialect = 'excel',  delimiter = ',') 
+            next(csv_data, None)
             passData = "INSERT INTO trx3 (quantity, spend_amount, period, hhk_code, trx_key_code, sub_code) VALUES (%s, %s,%s,%s,%s,%s,%s);" 
             cur = conn.cursor()
+            k=0
+            start = datetime.datetime.now()
             for row in csv_data:  
                 csvLine = row       
                 cur.execute(passData, csvLine) 
+                k+=1
             conn.commit()
+            time = (datetime.datetime.now() - start).seconds
             print ("%s data copied" % (my_file))
+            
+            # Save log file
+            d=datetime.datetime.now().strftime("%Y-%m-%d")
+            header = ['date', 'file', 'Nb_row', 'status', 'processing_time']
+            with open('/home/abdoul/'+d+'log.csv', 'w') as f:
+                writer = csv.DictWriter(f,header,delimiter=';')
+                writer.writeheader()
+                writer.writerow({'date':datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),'file':my_file, 'Nb_row':k, 'status':'Done', 'processing_time':time})
+              
+            print "Done Writing"
 
 
 # Update table
