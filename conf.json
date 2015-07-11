@@ -2,7 +2,7 @@
  "outpath":"/home/gamboabdoulraouf_gmail_com/pandas/result",
  "date_debut":"2015-01-01",
  "date_fin":"2015-06-30",
- "table":"trx",
+ "table":"trx2",
  "sasdata":"analytics/crffr/.../rpcm_extract_bucket/2015P6",
  "sasresults":"analytics/crffr/.../rpcm_extract_bucket/2015P6"
 }
