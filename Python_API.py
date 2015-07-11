@@ -84,10 +84,10 @@ equco="""SELECT period, sub_code,
                   COUNT (*) AS Nb_UVC, 
                   SUM(quantity) AS Nb_uvc,
                   SUM(spend_amount) AS CA 
-          FROM trx
+          FROM trx2
           GROUP BY sub_code, period"""
                 
-count="SELECT COUNT(*) AS Nb FROM trx"
+count="SELECT COUNT(*) AS Nb FROM trx2"
 
 
 if __name__=="__main__":
