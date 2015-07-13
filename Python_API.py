@@ -34,7 +34,7 @@ def importFromCsv(conn, inpath, table):
             # Save log file
             d=datetime.datetime.now().strftime("%Y-%m-%d")
             header = ['date', 'file', 'Nb_row', 'status', 'processing_time']
-            with open('/home/abdoul/'+d+'log.csv', 'w') as f:
+            with open('/home/gamboabdoulraouf_gmail_com/'+d+'log.csv', 'w') as f:
                 writer = csv.DictWriter(f,header,delimiter=';')
                 writer.writeheader()
                 writer.writerow({'date':datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),'file':my_file, 'Nb_row':k, 'status':'Done', 'processing_time':time})
