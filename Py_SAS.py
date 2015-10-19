@@ -8,7 +8,7 @@ import paramiko
 # ssh connexion
 ssh=paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect('130.211.138.40', username='abdoul')
+ssh.connect('xxx.xxx.xxx.xxx', username='xxxx')
 
 # Get configuration file data
 with open('conf.json') as conf_file:    
