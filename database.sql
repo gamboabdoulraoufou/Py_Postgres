@@ -34,3 +34,5 @@ CREATE TABLE trx3
                 hhk_code CHAR(50) NOT NULL,
                 trx_key_code CHAR(50) NOT NULL,
                 sub_code CHAR(50) NOT NULL);
+# list tables 
+trx
