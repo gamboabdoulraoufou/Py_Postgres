@@ -15,7 +15,9 @@ CREATE DATABASE test_db;
 GRANT ALL PRIVILEGES ON DATABASE test_db to abdoul;
 GRANT ALL ON trx to abdoul;
 
-\l
+
+# database size
+\l+
 
 # Quit postgres
 \q
